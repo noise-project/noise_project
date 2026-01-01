@@ -34,11 +34,31 @@ public class User {
     @Column(name = "join_date", nullable = false)
     private LocalDateTime joinDate;
 
-    @Column(name = "last_login", nullable = false)
+    @Column(name = "last_login")
     private LocalDateTime lastLoginDate;
 
     @Column(name = "refresh_token", length = 1000)
     private String refreshToken;
+
+    // protected인 이유? 외부에서 생성 불가, JPA에서 접근가능
+    protected User() {}
+
+    public static User Create(String email, String password, String nickName, Unit unit) {
+        User user = new User();
+        user.email = email;
+        user.password = password;
+        user.nickName = nickName;
+        user.unit = unit;
+        user.role = Role.USER;
+        return user;
+    }
+
+    //저장 직전에 실행
+    @PrePersist
+    public void prePersist() {
+        this.joinDate = LocalDateTime.now();
+        this.lastLoginDate = LocalDateTime.now();
+    }
 
     public Long getUserId() {
         return userId;
