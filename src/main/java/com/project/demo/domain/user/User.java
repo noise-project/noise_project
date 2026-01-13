@@ -31,18 +31,75 @@ public class User {
     @Column(nullable = false)
     private Role role = Role.USER;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Status status = Status.PENDING;
+
     @Column(name = "join_date", nullable = false)
     private LocalDateTime joinDate;
 
-    @Column(name = "last_login", nullable = false)
+    @Column(name = "last_login")
     private LocalDateTime lastLoginDate;
 
     @Column(name = "refresh_token", length = 1000)
     private String refreshToken;
 
-    public Long getUserId() {
-        return userId;
+    public void updateRefreshToken(String refreshToken){
+        this.refreshToken = refreshToken;
     }
+
+    // protected인 이유? 외부에서 생성 불가, JPA에서 접근가능
+    protected User() {}
+
+    // 일반 유저 생성
+    public static User create(String email, String password, String nickName, Unit unit, Status status) {
+        User user = new User();
+        user.email = email;
+        user.password = password;
+        user.nickName = nickName;
+        user.unit = unit;
+        user.role = Role.USER;
+        user.status = Status.PENDING;
+        return user;
+    }
+
+    //관리자 생성
+    public static User createAdmin(String email, String password, String nickName, Unit unit) {
+        User admin = new User();
+        admin.email = email;
+        admin.password = password;
+        admin.nickName = nickName;
+        admin.unit = unit;
+        admin.role = Role.ADMIN;
+        admin.status = Status.APPROVED;
+        return admin;
+    }
+    // 로그아웃
+    public void logout() {
+        this.refreshToken = null;
+    }
+
+    //저장 직전에 실행
+    @PrePersist
+    public void prePersist() {
+        this.joinDate = LocalDateTime.now();
+        this.lastLoginDate = LocalDateTime.now();
+    }
+
+    //상태 변경
+    public void approved() {
+        this.status = Status.APPROVED;
+    }
+
+    public void reject() {
+        this.status = Status.REJECTED;
+    }
+
+    public boolean isApproved() {
+        return this.status == Status.APPROVED;
+    }
+
+    public Long getUserId() {return userId;}
 
     public void setUserId(Long userId) {
         this.userId = userId;
@@ -110,5 +167,13 @@ public class User {
 
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }
