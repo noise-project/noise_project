@@ -1,16 +1,14 @@
 package com.project.demo.api;
 
-import com.project.demo.api.dto.UserLoginRequest;
-import com.project.demo.api.dto.UserLoginResponse;
-import com.project.demo.api.dto.UserSignUpRequest;
-import com.project.demo.api.dto.UserSignUpResponse;
+import com.project.demo.api.dto.*;
+import com.project.demo.domain.user.Status;
+import com.project.demo.service.AuthService;
 import com.project.demo.service.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
 @RestController
@@ -19,31 +17,34 @@ import jakarta.validation.Valid;
 public class UserApiController {
 
     private final UserService userService;
+    private final AuthService authService;
 
     @PostMapping("/signup")
     public ResponseEntity<UserSignUpResponse> signUp(@RequestBody @Valid UserSignUpRequest request) {
         Long userId = userService.signUp(request);
-
         return ResponseEntity.ok(
                 new UserSignUpResponse(
                         userId,
                         request.getEmail(),
-                        "회원가입이 완료되었습니다."
+                        Status.PENDING.name(),
+                        "회원가입 완료, 관리자 승인 대기중"
                 )
         );
     }
-
     @PostMapping("/login")
-    public ResponseEntity<UserLoginResponse> login(@RequestBody @Valid UserLoginRequest request) {
+    public ResponseEntity<UserLoginResponse> login(@RequestBody @Valid UserLoginRequest request, HttpServletResponse response) {
+        LoginResult result = authService.login(request);
 
-        Long userId = userService.login(request);
-        return ResponseEntity.ok(
-                new UserLoginResponse(
-                        userId,
-                        request.getEmail(),
-                        "로그인에 성공했습니다."
-                )
-        );
+        Cookie cookie = new Cookie("refreshToken", result.getRefreshToken());
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(14 * 24 * 60 * 60);
+
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok(result.getResponse());
+
     }
 
 }
