@@ -1,8 +1,6 @@
 package com.project.demo.init;
 
 import com.project.demo.domain.unit.Unit;
-import com.project.demo.domain.user.Role;
-import com.project.demo.domain.user.Status;
 import com.project.demo.domain.user.User;
 import com.project.demo.repository.UnitRepository;
 import com.project.demo.repository.UserRepository;
