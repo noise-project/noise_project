@@ -7,9 +7,9 @@ import java.util.Optional;
 
 public interface UnitRepository extends JpaRepository<Unit, Long> {
 
-    Optional<Unit> findByApartmentNameAndBuildingNoAndUnitNo(
-            String apartmentName,
-            String buildingNo,
-            String unitNo
+    Optional<Unit> findByPostNoAndAdressAndDetailAdress(
+            String postNo,
+            String adress,
+            String detailAdress
     );
 }

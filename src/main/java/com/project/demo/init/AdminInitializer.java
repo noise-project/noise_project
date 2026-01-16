@@ -26,16 +26,16 @@ public class AdminInitializer {
             return;
         }
 
-        Unit unit = unitRepository.findByApartmentNameAndBuildingNoAndUnitNo(
+        Unit unit = unitRepository.findByPostNoAndAdressAndDetailAdress(
                 "관리자 아파트",
                 "101동",
                 "1호"
         )
                 .orElseGet(() -> {
                     Unit u = new Unit();
-                    u.setApartmentName("관리자 아파트");
-                    u.setBuildingNo("101동");
-                    u.setUnitNo("1호");
+                    u.setPostNo("11923");
+                    u.setAdress("서울특별시 관악구 ");
+                    u.setDetailAdress("1층 101호");
                     return unitRepository.save(u);
                 });
 

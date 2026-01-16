@@ -8,7 +8,7 @@ import jakarta.persistence.*;
         uniqueConstraints = {
                 @UniqueConstraint(
                         name = "uq_unit",
-                        columnNames = {"apartment_name", "building_no", "unit_no"}
+                        columnNames = {"post_no", "adress", "detail_adress"}
                 )
         }
 )
@@ -19,14 +19,14 @@ public class Unit {
     @Column(name = "unit_id")
     private Long id;
 
-    @Column(name = "apartment_name", nullable = false, length = 100)
-    private String apartmentName;
+    @Column(name = "post_no", nullable = false, length = 20)
+    private String postNo;
 
-    @Column(name = "building_no", nullable = false, length = 20)
-    private String buildingNo;
+    @Column(name = "adress", nullable = false, length = 100)
+    private String adress;
 
-    @Column(name = "unit_no", nullable = false, length = 20)
-    private String unitNo;
+    @Column(name = "detail_adress", nullable = false, length = 100)
+    private String detailAdress;
 
     public Long getId() {
         return id;
@@ -36,27 +36,27 @@ public class Unit {
         this.id = id;
     }
 
-    public String getApartmentName() {
-        return apartmentName;
+    public String getPostNo() {
+        return postNo;
     }
 
-    public void setApartmentName(String apartmentName) {
-        this.apartmentName = apartmentName;
+    public void setPostNo(String postNo) {
+        this.postNo = postNo;
     }
 
-    public String getBuildingNo() {
-        return buildingNo;
+    public String getAdress() {
+        return adress;
     }
 
-    public void setBuildingNo(String buildingNo) {
-        this.buildingNo = buildingNo;
+    public void setAdress(String adress) {
+        this.adress = adress;
     }
 
-    public String getUnitNo() {
-        return unitNo;
+    public String getDetailAdress() {
+        return detailAdress;
     }
 
-    public void setUnitNo(String unitNo) {
-        this.unitNo = unitNo;
+    public void setDetailAdress(String detailAdress) {
+        this.detailAdress = detailAdress;
     }
 }

@@ -26,7 +26,7 @@ public class AdminService {
                         user.getUserId(),
                         user.getEmail(),
                         user.getNickName(),
-                        user.getUnit().getApartmentName(),
+                        user.getUnit().getAdress(),
                         user.getStatus()
                 ))
                 .toList();
